@@ -133,9 +133,7 @@ public class Folder {
         // 临时变量，保存需要输出的内容
         StringBuilder sb = new StringBuilder(this.getFolderName()+"\n");
         // 保存每行前需要多少空格（根据目录所在深度决定）
-        StringBuilder spaceBuilder = new StringBuilder();
-        spaceBuilder.append(" ".repeat(Math.max(0, height * 4)));
-        String spaces = spaceBuilder.toString();
+        String spaces = " ".repeat(Math.max(0, height * 4));
         // 每个文件夹都先打印所持有文件
         files.forEach((file) -> sb.append(spaces).append(" |- ").append(file).append('\n'));
         // 之后递归打印所持有文件夹
