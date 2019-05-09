@@ -26,18 +26,18 @@ public class FolderParser implements Callable<Folder> {
      * @return 文件夹
      */
     private static Folder parser(List<String> paths) {
-        // 根文件夹
+        // 初始化根文件夹
         Folder rootFolder = new Folder(null,"/");
-        // 游标文件夹
+        // 声明游标文件夹，初始值为根文件夹
         Folder cursorFolder = rootFolder;
-        // 前缀文件夹目录字符串
+        // 临时变量，记录当前游标文件夹前缀字符串的长度，方便后续文件名的截取
         int beginIndex = 0;
         for (String path : paths) {
-            // 收集目录前缀，用以跳转游标文件夹
+            // 收集目录前缀，用以跳转文件夹
             StringBuilder prefixCollector = new StringBuilder();
             // 最后一个字符是 / ，说明是目录
             if (path.charAt(path.length() - 1) == '/') {
-                // 重置游标到根
+                // 重置游标到根文件夹
                 cursorFolder = rootFolder;
                 for (char ch : path.toCharArray()) {
                     prefixCollector.append(ch);
@@ -48,16 +48,15 @@ public class FolderParser implements Callable<Folder> {
                             // 如果有则获取该文件夹，并跳转
                             cursorFolder = cursorFolder.getFolder(prefixCollector.toString());
                         } else {
-                            // 如果没有该文件夹就新增文件夹并跳转
+                            // 如果没有该文件夹就新增文件夹，并跳转
                             cursorFolder = cursorFolder.addFolder(prefixCollector.toString());
                         }
-                        // 清零
+                        // 清零前缀字符串
                         prefixCollector.setLength(0);
                     }
                 }
                 // 记录目录长度，下一系列该路径下的文件直接截取
                 beginIndex = path.length();
-
             } else {
                 // 如果不是文件夹，因为文件夹必在文件前，所以肯定在文件夹中，所以直接新增文件
                 cursorFolder.addFile(path.substring(beginIndex));
